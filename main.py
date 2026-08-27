@@ -4,7 +4,7 @@ from pathlib import Path
 from lab_semana1.carga import cargar, guardar, limpiar, reporte_nulos
 
 
-class Exception(Exception):
+class FriendlyException(Exception):
     """A concrete exception type with useful metadata and user-friendly display."""
 
     def __init__(self, message: str = "", *, code: str | None = None, details: dict | None = None):

@@ -16,3 +16,17 @@ uv run python main.py
 ## Hallazgos
 
 ## Decisiones de limpieza
+
+## Pregunta 1
+## uv.lock contiene información de runtime, dependencias y paquetes requeridos
+## uv sync puede reconstruir el entorno porque uv.lock sí está versionado en el repositorio
+## y guarda las versiones exactas (con hash) de cada dependencia resuelta a partir de pyproject.toml,
+## así que uv solo necesita descargarlas e instalarlas para recrear .venv/ de forma idéntica.
+## muestra:
+## version = 1
+## revision = 3
+## requires-python = ">=3.14"
+## ...
+## [[package]]
+## name = "numpy"
+## version = "2.5.2"

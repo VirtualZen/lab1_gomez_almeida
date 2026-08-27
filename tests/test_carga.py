@@ -6,13 +6,11 @@ from lab_semana1.carga import guardar, limpiar, reporte_nulos
 
 
 def test_cargar(sample_df):
-    # df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
     df = sample_df
     assert df.shape == (1994, 128)
     assert df.columns[0] == "state"
 
 def test_reporte_nulos(sample_df):
-    # df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
     df = sample_df
     result = reporte_nulos(df)
 
@@ -22,7 +20,6 @@ def test_reporte_nulos(sample_df):
 
 
 def test_limpiar(sample_df):
-    # df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
     df = sample_df
     result = limpiar(df)
 
@@ -35,7 +32,6 @@ def test_limpiar(sample_df):
     
 
 def test_guardar(sample_df):
-    # df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
     df = sample_df
     data_dir = Path("data")
     data_dir.mkdir(exist_ok=True)

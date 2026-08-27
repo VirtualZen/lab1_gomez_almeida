@@ -13,7 +13,25 @@ uv sync
 uv run pytest -q
 uv run python main.py
 
+## Como correr diagnostico datos
+uv run pytest -q -s tests/test_check_clean.py::test_counts
+
 ## Hallazgos
+
+En la versión inicial
+uv run pytest -q -s tests/test_check_clean.py::test_counts no se hace todavía la limpieza completa.
+En el código hay varios .venv y eso causa conflictos y el warning:
+`... ... /.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+before rows,cols: (1994, 128)
+before total NaNs: 39202
+before duplicates: 0
+after rows,cols: (1994, 128)
+after total NaNs: 39202
+
+## Problemas y workarounds
+Al correr los comandos de creacion inicial se crearon carpetas lab-semana1 en dos sitios. No se entiende la duplicación.
+
+
 
 ## Decisiones de limpieza
 

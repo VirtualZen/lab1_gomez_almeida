@@ -73,6 +73,25 @@ def limpiar(df):
         )
     # Apply the missing-value rule required by the assignment here.
     # result.fillna(method='ffill', inplace=True)
+
+    # drop columns with >80% missing
+    threshold = int(len(result) * 0.8)
+    result = result.loc[:, result.isna().sum() <= threshold]
+
+    # imput numeric columns with median when missing rate < 5%
+    num_cols = result.select_dtypes(include=np.number).columns
+    for c in num_cols:
+        miss_frac = result[c].isna().mean()
+        if miss_frac > 0 and miss_frac < 0.05:
+            result[c] = result[c].fillna(result[c].median())
+
+    # fill categorical/text with mode or 'missing'
+    cat_cols = result.select_dtypes(include=["object","string"]).columns
+    for c in cat_cols:
+        if result[c].isna().any():
+            mode = result[c].mode().iloc[0] if not result[c].mode().empty else "missing"
+            result[c] = result[c].fillna(mode)
+
     return result.reset_index(drop=True)
 
 

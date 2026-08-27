@@ -2,17 +2,18 @@ from pathlib import Path
 
 import pandas as pd
 
-from lab_semana1.carga import cargar, guardar, limpiar, reporte_nulos
+from lab_semana1.carga import guardar, limpiar, reporte_nulos
 
 
-def test_cargar(tmp_path):
-    df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
+def test_cargar(sample_df):
+    # df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
+    df = sample_df
     assert df.shape == (1994, 128)
     assert df.columns[0] == "state"
 
-def test_reporte_nulos():
-    df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
-
+def test_reporte_nulos(sample_df):
+    # df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
+    df = sample_df
     result = reporte_nulos(df)
 
     assert result.iloc[0]["columna"] == "PolicReqPerOffic"
@@ -20,9 +21,9 @@ def test_reporte_nulos():
     assert result.iloc[0]["porcentaje"].round(6) == 84.002006
 
 
-def test_limpiar():
-    df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
-
+def test_limpiar(sample_df):
+    # df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
+    df = sample_df
     result = limpiar(df)
 
     # Esto está horrible, pero es lo que se me ocurre para testear que se hizo algo. No es un test perfecto, pero al menos asegura que no se volaron columnas.
@@ -33,8 +34,9 @@ def test_limpiar():
     # assert result.index.tolist() == [0]
     
 
-def test_guardar(tmp_path):
-    df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
+def test_guardar(sample_df):
+    # df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
+    df = sample_df
     data_dir = Path("data")
     data_dir.mkdir(exist_ok=True)
     archivo = data_dir / "test_output.parquet"

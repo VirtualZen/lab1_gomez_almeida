@@ -23,9 +23,12 @@ def test_limpiar(sample_df):
     df = sample_df
     result = limpiar(df)
 
-    # Esto está horrible, pero es lo que se me ocurre para testear que se hizo algo. No es un test perfecto, pero al menos asegura que no se volaron columnas.
+    # Esto está horrible, pero es lo que se me ocurre para testear que se hizo algo. No es un test perfecto, 
+    # pero al menos asegura que no se volaron columnas.
     # assert result.columns.tolist() == ["state", "county", "community", "communityname","fold"]
-    assert result.columns.tolist() == df.columns.tolist()
+    expected_reduction = 21
+
+    assert len(result.columns) == len(df.columns) - expected_reduction
     assert result.loc[0, "state"] == 8
     assert len(result) >= 1
     # assert result.index.tolist() == [0]

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 
 from lab_semana1.carga import cargar, guardar, limpiar, reporte_nulos
@@ -33,8 +35,11 @@ def test_limpiar():
 
 def test_guardar(tmp_path):
     df = cargar("https://archive.ics.uci.edu/static/public/183/data.csv", na_values=["?"])
-    archivo = tmp_path / "test_output.parquet"
+    data_dir = Path("data")
+    data_dir.mkdir(exist_ok=True)
+    archivo = data_dir / "test_output.parquet"
     guardar(df, archivo)
 
     recuperado = pd.read_parquet(archivo)
     pd.testing.assert_frame_equal(df, recuperado)
+

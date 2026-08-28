@@ -16,3 +16,15 @@ uv run python main.py
 ## Hallazgos
 
 ## Decisiones de limpieza
+
+## Pregunta de investigación 2
+
+¿Qué diferencia hay entre correr `pytest` a secas y `uv run pytest`?
+
+`uv run pytest` garantiza que las pruebas se ejecuten con el intérprete y las
+dependencias exactas fijadas en `uv.lock` (el `.venv` del proyecto), sin
+necesidad de activarlo manualmente. Si en cambio alguien corre `pytest` a
+secas sin haber activado ese entorno virtual, puede terminar usando un
+Python global del sistema que no tiene instaladas las dependencias del
+proyecto (o versiones distintas), y las pruebas fallarían o darían
+resultados no reproducibles.

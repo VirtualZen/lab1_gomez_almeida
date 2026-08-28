@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from lab_semana1.carga import guardar, limpiar, reporte_nulos
 
@@ -16,7 +17,9 @@ def test_reporte_nulos(sample_df):
 
     assert result.iloc[0]["columna"] == "PolicReqPerOffic"
     assert result.iloc[0]["nulos"] == 1675
-    assert result.iloc[0]["porcentaje"].round(6) == 84.002006
+    # Esto funciona pero el laboratorio quiere usar approx para que cumpla con el margen de error. 
+    # assert result.iloc[0]["porcentaje"].round(6) == 84.002006
+    assert result.iloc[0]["porcentaje"] == pytest.approx(84, abs=0.01)
 
 
 def test_limpiar(sample_df):

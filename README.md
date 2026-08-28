@@ -11,13 +11,19 @@
 ## Como correr
 uv sync
 uv run pytest -q
+uv run pytest -v
 uv run python main.py
 
 ## Como correr diagnostico datos
-uv run pytest -q -s tests/test_check_clean.py::test_counts
+uv run pytest -q tests/test_carga.py
+uv run pytest -v tests/test_carga.py
+
+## Correr prueba alterna
+tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTHONPATH=src uv run --active pytest -v tests/test_analisis.py
 
 ## Hallazgos
 
+## Hallazgos Carga
 En la versión inicial
 uv run pytest -q -s tests/test_check_clean.py::test_counts no se hace una impieza completa. Se usaron valores configurables
 
@@ -35,11 +41,25 @@ No se encontraron filas duplicadas relevantes en el dataset original.
 Aproximadamente 21 columnas fueron eliminadas por tener más del 80% de valores faltantes; entre las columnas con más nulos están PolicReqPerOffic, PolicAveOTWorked, PolicPerPop, RacialMatchCommPol, etc.
 La limpieza conservadora conserva la mayoría de las variables útiles y añade indicadores de faltantes para las columnas imputadas.
 
+## Hallazgos Análisis
+<TODO Ronnie>
 
 ## Problemas y workarounds
 Al correr los comandos de creacion inicial se crearon carpetas lab-semana1 en dos sitios. No se entiende la duplicación.
 En el código hay varios .venv y eso causa conflictos y el warning:
 `... ... /.venv` does not match the project environment path `.venv` and will be ignored; use `--active` to target the active environment instead
+
+## TODO - PR
+
+- [x] Confirmar que el merge estaba bloqueado por un ruleset de GitHub.
+- [x] Corregir los comentarios solicitados por `USFQ-apgomez`.
+- [x] Mantener `test_limpiar` como está: las columnas indicadoras se eliminan según la lógica definida.
+- [x] Renombrar la clase `Exception` en `main.py`.
+- [x] Ejecutar `uv run pytest -q` y corregir cualquier prueba fallida.
+- [x] Confirmar que los archivos de `Lab01/lab-semana1` estén versionados en `feature/carga-limpieza`.
+- [x] Hacer commit y push de los cambios al mismo branch del PR.
+- [x] Marcar las conversaciones resueltas y solicitar nuevamente la revisión de `USFQ-apgomez`.
+- [x] Obtener la aprobación final y verificar que los checks requeridos estén en verde.
 
 
 ## Decisiones de limpieza

@@ -11,21 +11,54 @@
 ## Como correr
 uv sync
 uv run pytest -q
+uv run pytest -v
 uv run python main.py
 
+## Como correr diagnostico datos
+uv run pytest -q tests/test_carga.py
+uv run pytest -v tests/test_carga.py
+
+## Correr prueba alterna
+tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTHONPATH=src uv run --active pytest -v tests/test_analisis.py
+
 ## Hallazgos
+- (A) Aproximadamente 21 columnas fueron eliminadas por tener más del 80% de valores faltantes (de 128 columnas originales a 107), sin encontrarse filas duplicadas relevantes en el dataset original.
 - (B) La tasa de crimen violento (ViolentCrimesPerPop) muestra una correlación clara con el porcentaje de población bajo la línea de pobreza (PctPopUnderPov).
-
 ## Decisiones de limpieza
+Umbrales configurables en la función limpiar():
+drop_thresh (por defecto 0.8): eliminar columnas con >80% de valores faltantes.
+impute_threshold (por defecto 0.05): solo imputar columnas con ≤5% de faltantes (estrategia conservadora).
+Imputación:
+Variables numéricas con 0 < missing ≤ impute_threshold: se imputan con la mediana y se añade la columna indicadora <nombre>_was_missing.
+Variables categóricas con 0 < missing ≤ impute_threshold: se imputan con la moda y se añade <nombre>_was_missing.
+Variables categóricas con missing > impute_threshold: se rellena con el sentinel "missing" y se añade el indicador <nombre>_was_missing.
+Registro y reproducibilidad:
+limpiar(..., return_report=True) devuelve un report con listas dropped_columns, imputed_numeric, imputed_categorical y recuentos de filas (antes/después). Guardar este report junto a los artefactos del pipeline para trazabilidad.
+Razonamiento: la política prioriza conservar columnas estables y evitar introducir sesgo por imputaciones agresivas; los indicadores de faltantes preservan la señal útil para modelos que explotan patrones de missingness.
+Cómo ajustar: para conservar más columnas cambiar impute_threshold a valores mayores (ej. 0.2), o para ser más agresivo reducir drop_thresh.
 
-## Pregunta de investigación 2
+## Pregunta 1
+¿por qué uv sync puede reconstruir el entorno aunque .venv/ no esté versionado en el repositorio? ¿Qué archivo se
+lo permite y qué guarda exactamente ese archivo? Dos líneas bastan.
 
-¿Qué diferencia hay entre correr `pytest` a secas y `uv run pytest`?
+uv.lock contiene información de runtime, dependencias y paquetes requeridos
+uv sync puede reconstruir el entorno porque uv.lock sí está versionado en el repositorio
+y guarda las versiones exactas (con hash) de cada dependencia resuelta a partir de pyproject.toml,
+así que uv solo necesita descargarlas e instalarlas para recrear .venv/ de forma idéntica.
+muestra:
+version = 1
+revision = 3
+requires-python = ">=3.14"
+ ...
+[[package]]
+name = "numpy"
+version = "2.5.2"
 
-`uv run pytest` garantiza que las pruebas se ejecuten con el intérprete y las
-dependencias exactas fijadas en `uv.lock` (el `.venv` del proyecto), sin
-necesidad de activarlo manualmente. Si en cambio alguien corre `pytest` a
-secas sin haber activado ese entorno virtual, puede terminar usando un
-Python global del sistema que no tiene instaladas las dependencias del
-proyecto (o versiones distintas), y las pruebas fallarían o darían
-resultados no reproducibles.
+
+## Pregunta 2
+¿qué diferencia hay entre correr pytest a secas y uv run pytest? Pista: tiene que ver con cuál Python y cuál
+entorno terminan ejecutando las pruebas, y con qué pasa si alguien no activó el entorno virtual.
+
+pytest a secas ejecuta el comando pytest que esté en el PATH de la sesión de shell: es decir, usa el intérprete de Python y las dependencias del entorno actualmente activado (por ejemplo, la venv si la activaste). Si no has activado la venv, pytest puede ejecutarse con el Python del sistema y fallar por import errors o por versiones distintas de paquetes.
+uv run pytest ejecuta pytest dentro del entorno que gestiona uv según la configuración del proyecto (archivo uv.lock / pyproject.toml). uv crea/usa un entorno reproducible con la versión de Python y las dependencias declaradas, por lo que las pruebas se ejecutan en el mismo intérprete/paquetes en cualquier máquina que use uv, aún si el usuario no activó manualmente la venv.
+Consecuencia práctica: si alguien no activó el entorno virtual y ejecuta pytest directamente puede obtener errores tipo ModuleNotFoundError o diferencias por versiones. Con uv run pytest esas discrepancias se evitan porque uv controla cuál Python y qué paquetes se usan.

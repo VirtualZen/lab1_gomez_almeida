@@ -1,0 +1,32 @@
+{
+  "dropped_columns": [
+    "LemasSwornFT",
+    "LemasSwFTPerPop",
+    "LemasSwFTFieldOps",
+    "LemasSwFTFieldPerPop",
+    "LemasTotalReq",
+    "LemasTotReqPerPop",
+    "PolicReqPerOffic",
+    "PolicPerPop",
+    "RacialMatchCommPol",
+    "PctPolicWhite",
+    "PctPolicBlack",
+    "PctPolicHisp",
+    "PctPolicAsian",
+    "PctPolicMinor",
+    "OfficAssgnDrugUnits",
+    "NumKindsDrugsSeiz",
+    "PolicAveOTWorked",
+    "PolicCars",
+    "PolicOperBudg",
+    "LemasPctPolicOnPatr",
+    "LemasGangUnitDeploy",
+    "PolicBudgPerPop"
+  ],
+  "imputed_numeric": [
+    "OtherPerCap"
+  ],
+  "imputed_categorical": [],
+  "n_rows_before": 1994,
+  "n_rows_after": 1994
+}

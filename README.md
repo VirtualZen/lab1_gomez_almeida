@@ -18,6 +18,9 @@ tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTH
 
 
 
+
 ## Hallazgos
+No aplica aqui porque es una prueba en una rama alterna y el código es de métodos interesantes sobre el dataframe ficticio
 
 ## Decisiones de limpieza
+No aplica aqui porque es una prueba en una rama alterna y el código es de métodos interesantes sobre el dataframe ficticio

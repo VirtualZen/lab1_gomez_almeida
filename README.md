@@ -24,6 +24,18 @@ tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTH
 ## Hallazgos
 - (A) Aproximadamente 21 columnas fueron eliminadas por tener más del 80% de valores faltantes (de 128 columnas originales a 107), sin encontrarse filas duplicadas relevantes en el dataset original.
 - (B) La tasa de crimen violento (ViolentCrimesPerPop) muestra una correlación clara con el porcentaje de población bajo la línea de pobreza (PctPopUnderPov).
+
+### Detalle de limpieza (A)
+- before rows,cols: (1994, 128)
+- before total NaNs: 39202
+- before duplicates: 0
+- after rows,cols: (1994, 107)
+- after total NaNs: 2351
+- removed rows: 0
+- removed cols: 21
+
+Entre las columnas con más nulos están PolicReqPerOffic, PolicAveOTWorked, PolicPerPop, RacialMatchCommPol, entre otras. La limpieza conservadora conserva la mayoría de las variables útiles y añade indicadores de faltantes para las columnas imputadas.
+
 ## Decisiones de limpieza
 Umbrales configurables en la función limpiar():
 drop_thresh (por defecto 0.8): eliminar columnas con >80% de valores faltantes.
@@ -53,7 +65,6 @@ requires-python = ">=3.14"
 [[package]]
 name = "numpy"
 version = "2.5.2"
-
 
 ## Pregunta 2
 ¿qué diferencia hay entre correr pytest a secas y uv run pytest? Pista: tiene que ver con cuál Python y cuál

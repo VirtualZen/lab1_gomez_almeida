@@ -13,6 +13,11 @@ uv sync
 uv run pytest -q
 uv run python main.py
 
+tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTHONPATH=src uv run --active pytest -v
+tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTHONPATH=src uv run pytest -v
+
+
+
 ## Hallazgos
 
 ## Decisiones de limpieza

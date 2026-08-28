@@ -14,6 +14,7 @@ uv run pytest -q
 uv run python main.py
 
 ## Hallazgos
+- (B) La tasa de crimen violento (ViolentCrimesPerPop) muestra una correlación clara con el porcentaje de población bajo la línea de pobreza (PctPopUnderPov).
 
 ## Decisiones de limpieza
 

@@ -24,6 +24,19 @@ tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTH
 ## Hallazgos
 - (A) Aproximadamente 21 columnas fueron eliminadas por tener más del 80% de valores faltantes (de 128 columnas originales a 107), sin encontrarse filas duplicadas relevantes en el dataset original.
 - (B) La tasa de crimen violento (ViolentCrimesPerPop) muestra una correlación clara con el porcentaje de población bajo la línea de pobreza (PctPopUnderPov).
+- (B) La tasa de crimen violento (ViolentCrimesPerPop) muestra una correlación clara con el porcentaje
+de población bajo la línea de pobreza (PctPopUnderPov): la recta de mínimos cuadrados ajustada tiene
+pendiente=0.5322 e intercepto=0.0767, es decir, por cada punto porcentual adicional de población bajo
+la línea de pobreza, la tasa de crimen violento normalizada aumenta en promedio 0.53 unidades.
+- (B) Al agrupar las comunidades por cuartiles de población (resumen_por_grupo), se observa una
+tendencia creciente: el cuartil de mayor población (Q4) tiene la media más alta de crimen violento
+(0.371) y también la mayor dispersión (std=0.266), casi el doble que el cuartil de menor población
+(Q1: media=0.170, std=0.184). Esto sugiere que las comunidades más grandes no solo tienden a tener
+más crimen violento en promedio, sino también mayor variabilidad entre ellas.
+- (B) Las 5 comunidades con mayor ViolentCrimesPerPop (top_k) alcanzan el valor máximo normalizado
+(1.0) y la mayoría pertenece al cuartil de mayor población (Q4), lo cual es consistente con el
+hallazgo anterior: el tamaño poblacional se asocia con mayor riesgo de crimen violento extremo,
+aunque no es el único factor (una de las cinco, eastchicagocity, está en Q3).
 
 ### Detalle de limpieza (A)
 - before rows,cols: (1994, 128)

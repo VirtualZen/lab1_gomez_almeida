@@ -11,11 +11,14 @@
 ## Como correr
 uv sync
 uv run pytest -q
-uv run python main.py
+uv run pytest -v
+uv run lab-semana1
 
 tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTHONPATH=src uv run --active pytest -v
 tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTHONPATH=src uv run pytest -v
 
+## Correr prueba alterna
+tmpdir=$(mktemp -d /tmp/uv-cache-XXXXX) && export UV_CACHE_DIR="$tmpdir" && PYTHONPATH=src uv run --active pytest -v tests/test_analisis.py
 
 
 

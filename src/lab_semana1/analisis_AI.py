@@ -12,14 +12,6 @@ import pandas as pd
 def top_correlations(df: pd.DataFrame, target: str, n: int = 10) -> pd.Series:
     """Devuelve las n variables numéricas con mayor correlación absoluta
     respecto a `target`.
-
-    Args:
-        df: DataFrame de entrada.
-        target: Nombre de la columna objetivo (numérica).
-        n: Número máximo de variables a devolver.
-
-    Returns:
-        Series ordenada de correlaciones absolutas (mayor a menor).
     """
     num = df.select_dtypes(include=[np.number])
     if target not in num.columns:
@@ -29,12 +21,7 @@ def top_correlations(df: pd.DataFrame, target: str, n: int = 10) -> pd.Series:
 
 
 def plot_top_correlations(df: pd.DataFrame, target: str, n: int = 10, out_path: str | Path | None = None) -> pd.Series:
-    """Calcula y grafica las top-n correlaciones absolutas con `target`.
-
-    Si `out_path` se provee, guarda la figura en la ruta indicada.
-
-    Returns la Series de correlaciones calculadas.
-    """
+    """Calcula y grafica las top-n correlaciones absolutas con `target`."""
     import matplotlib.pyplot as plt
 
     corrs = top_correlations(df, target, n=n)
@@ -55,19 +42,14 @@ def plot_top_correlations(df: pd.DataFrame, target: str, n: int = 10, out_path: 
 
 
 def summary_statistics(df: pd.DataFrame, numeric_only: bool = True) -> pd.DataFrame:
-    """Devuelve estadísticas descriptivas transpuestas para facilitar lectura.
-
-    Args:
-        df: DataFrame de entrada.
-        numeric_only: si True devuelve solo columnas numéricas.
-    """
+    """Devuelve estadísticas descriptivas transpuestas para facilitar lectura."""
     if numeric_only:
         return df.describe().T
     return df.describe(include="all").T
 
 
 def split_features_target(df: pd.DataFrame, target: str) -> tuple[pd.DataFrame, pd.Series]:
-    """Separa X (features) e y (target). Lanza ValueError si target no existe."""
+    """Separa X (features) e y (target)."""
     if target not in df.columns:
         raise ValueError(f"Target '{target}' no existe en el DataFrame")
     X = df.drop(columns=[target])

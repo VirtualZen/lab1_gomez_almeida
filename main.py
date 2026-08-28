@@ -1,7 +1,10 @@
 import json
 from pathlib import Path
 
+import pandas as pd
+
 from lab_semana1.carga import cargar, guardar, limpiar, reporte_nulos
+from src.analisis import recta_minimos_cuadrados, resumen_por_grupo, top_k
 
 
 class FriendlyException(Exception):
@@ -61,14 +64,37 @@ def main():
     with open(report_path, "w", encoding="utf8") as fh:
         json.dump(report, fh, indent=2)
 
-    # try to plot top correlations with target if matplotlib available
     target = "ViolentCrimesPerPop"
+
+    if "population" in cleaned.columns:
+        cleaned["grupo_poblacion"] = pd.qcut(
+            cleaned["population"], 4, labels=["Q1", "Q2", "Q3", "Q4"]
+        )
+        print("Resumen por grupo de poblacion:")
+        print(resumen_por_grupo(cleaned, "grupo_poblacion", [target]))
+    else:
+        print("Columna 'population' no encontrada; se omite resumen_por_grupo.")
+
+    if target in cleaned.columns:
+        print(f"Top 5 comunidades por {target}:")
+        print(top_k(cleaned, target, 5))
+    else:
+        print(f"Columna {target} no encontrada; se omite top_k.")
+
+    if "PctPopUnderPov" in cleaned.columns and target in cleaned.columns:
+        a, b = recta_minimos_cuadrados(
+            cleaned["PctPopUnderPov"].to_numpy(),
+            cleaned[target].to_numpy(),
+        )
+        print(f"Recta de minimos cuadrados: pendiente={a:.4f}, intercepto={b:.4f}")
+    else:
+        print("Columnas necesarias no encontradas; se omite regresion lineal.")
+
     try:
         import matplotlib.pyplot as plt
     except ImportError:
         print("matplotlib not installed; skipping figure.")
     else:
-        # separate plotting runtime errors (font, backend, I/O) from import
         try:
             if target in cleaned.columns:
                 num = cleaned.select_dtypes(include=["number"]).drop(columns=[target], errors="ignore")
